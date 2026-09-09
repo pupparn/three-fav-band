@@ -47,7 +47,10 @@ export default function Home() {
           <span className={`${heading} text-2xl tracking-tight`}>Three Fav Bands</span>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <span className="px-4.5 py-2.5 rounded-full bg-[#2a2724] text-sm font-semibold text-[#f6a06b]">
+          <span
+            key={subscribedCount}
+            className="bump px-4.5 py-2.5 rounded-full bg-[#2a2724] text-sm font-semibold text-[#f6a06b]"
+          >
             {subscribedCount} subscribed
           </span>
           <Link
@@ -90,7 +93,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => toggleSubscribe(band.name)}
-                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-colors ${
+                className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-[background-color,border-color,color,transform] duration-150 [transition-timing-function:var(--ease-out)] active:scale-95 ${
                   subscribed[band.name]
                     ? "bg-[#f6a06b] text-[#241a12] border border-[#f6a06b]"
                     : "bg-transparent text-[#dcd3c4] border border-[rgba(245,234,216,0.22)] hover:brightness-110"
@@ -101,9 +104,9 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => addLike(band.name)}
-                className="px-5 py-2.5 rounded-full text-sm font-semibold bg-transparent text-[#dcd3c4] border border-[rgba(245,234,216,0.22)] hover:brightness-110"
+                className="px-5 py-2.5 rounded-full text-sm font-semibold bg-transparent text-[#dcd3c4] border border-[rgba(245,234,216,0.22)] transition-transform duration-150 [transition-timing-function:var(--ease-out)] active:scale-95 hover:brightness-110"
               >
-                ♥ {likes[band.name] ?? 0} likes
+                ♥ <span key={likes[band.name] ?? 0} className="bump inline-block">{likes[band.name] ?? 0}</span> likes
               </button>
             </div>
             <BandCard {...band} />
