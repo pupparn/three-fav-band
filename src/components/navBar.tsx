@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { bandData } from "@/data/bandData";
 
 type NavBarProps = {
@@ -12,6 +13,12 @@ export default function NavBar({ active, onSelect }: NavBarProps) {
         <span className="font-[family-name:var(--font-caprasimo)] text-2xl tracking-tight">Three Fav Bands</span>
       </div>
       <nav className="flex gap-2.5">
+        <Link
+          href="/"
+          className="px-6 py-2.5 rounded-full text-[15px] font-semibold transition-colors bg-transparent text-[#dcd3c4] border border-[rgba(245,234,216,0.22)] hover:brightness-110"
+        >
+          Home
+        </Link>
         {bandData.map((b, i) => (
           <button
             key={b.name}
