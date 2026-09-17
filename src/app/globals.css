@@ -1,32 +1,39 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+
+  /* Design tokens — Three Stages dark palette */
+  --color-ink: #1a1817;
+  --color-ink-raised: #2a2724;
+  --color-paper: #f5ead8;
+  --color-paper-dim: #dcd3c4;
+  --color-paper-muted: #a19786;
+  --color-paper-faint: #82796a;
+  --color-accent: #f6a06b;
+  --color-accent-ink: #241a12;
+  --color-mint: #aebf92;
+  --color-border: rgba(245, 234, 216, 0.12);
+  --color-border-hairline: rgba(245, 234, 216, 0.1);
+  --color-border-strong: rgba(245, 234, 216, 0.22);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-:root {
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --color-ink: var(--color-ink);
+  --color-ink-raised: var(--color-ink-raised);
+  --color-paper: var(--color-paper);
+  --color-paper-dim: var(--color-paper-dim);
+  --color-paper-muted: var(--color-paper-muted);
+  --color-paper-faint: var(--color-paper-faint);
+  --color-accent: var(--color-accent);
+  --color-accent-ink: var(--color-accent-ink);
+  --color-mint: var(--color-mint);
+  --color-border: var(--color-border);
+  --color-border-hairline: var(--color-border-hairline);
+  --color-border-strong: var(--color-border-strong);
 }
 
 @keyframes bump {
@@ -42,5 +49,163 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .bump {
     animation: none;
+  }
+}
+
+@keyframes holo-spin {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.holo-foil {
+  background-image: conic-gradient(
+    from 0deg,
+    #ff6ec7,
+    #6ee7ff,
+    #b98cff,
+    var(--color-accent),
+    var(--color-mint),
+    #ff6ec7
+  );
+  background-size: 200% 200%;
+  animation: holo-spin 6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .holo-foil {
+    animation: none;
+  }
+}
+
+/* Card grid entrance — occasional page view, not a daily-scroll feed */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-in {
+  animation: card-in 300ms var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-in {
+    animation: none;
+  }
+}
+
+/* Route entry fade — bridges the jump into a detail page */
+.page-in {
+  opacity: 1;
+  transition: opacity 300ms var(--ease-out);
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+/* Native dialog open/close, CSS-only via @starting-style */
+dialog {
+  opacity: 0;
+  transform: scale(0.96);
+  transition:
+    opacity 250ms var(--ease-out),
+    transform 250ms var(--ease-out),
+    overlay 250ms allow-discrete,
+    display 250ms allow-discrete;
+}
+
+dialog[open] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@starting-style {
+  dialog[open] {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+dialog::backdrop {
+  opacity: 0;
+  transition:
+    opacity 250ms var(--ease-out),
+    overlay 250ms allow-discrete,
+    display 250ms allow-discrete;
+}
+
+dialog[open]::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  dialog[open]::backdrop {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  dialog,
+  dialog::backdrop {
+    transition-duration: 1ms;
+  }
+}
+
+/* Toast — Sonner-style, slightly slower than the generic UI budget.
+   Tailwind v4's translate utilities use the native `translate` property via
+   --tw-translate-y, so animate that (not `transform`) to compose cleanly
+   with the toast's -translate-x-1/2 centering utility. */
+.toast-in {
+  opacity: 1;
+  --tw-translate-y: 0px;
+  transition:
+    opacity 400ms ease,
+    translate 400ms ease;
+
+  @starting-style {
+    opacity: 0;
+    --tw-translate-y: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast-in {
+    --tw-translate-y: 0px;
+
+    @starting-style {
+      --tw-translate-y: 0px;
+    }
+  }
+}
+
+/* Validation error text — fades in, doesn't just appear */
+.error-in {
+  opacity: 1;
+  transition: opacity 150ms var(--ease-out);
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+/* "..." card menu — pops from its trigger, near-imperceptible (opened often) */
+.card-menu {
+  transform-origin: top right;
+  transition:
+    opacity 130ms var(--ease-out),
+    transform 130ms var(--ease-out);
+}
+
+@starting-style {
+  details[open] > .card-menu {
+    opacity: 0;
+    transform: scale(0.95);
   }
 }
